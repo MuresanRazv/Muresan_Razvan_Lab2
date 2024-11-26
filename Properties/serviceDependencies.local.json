@@ -13,6 +13,10 @@
     "mssql2": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:LibraryContext"
+    },
+    "mssql3": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:NewLibraryContext"
     }
   }
 }
