@@ -28,6 +28,17 @@ namespace Muresan_Razvan_Lab2.Controllers
         // GET: Authors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
+            var books = from b in _context.Book
+                        join a in _context.Author on b.AuthorID equals a.ID
+                        select new BookViewModel
+                        {
+                            ID = b.ID,
+                            Title = b.Title,
+                            Price = b.Price,
+                            FullName = a.FirstName + " " + a.LastName
+                        };
+
             if (id == null)
             {
                 return NotFound();
@@ -35,12 +46,21 @@ namespace Muresan_Razvan_Lab2.Controllers
 
             var author = await _context.Author
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (author == null)
             {
                 return NotFound();
             }
 
-            return View(author);
+            var authorView = new AuthorViewModel
+            {
+                ID = author.ID,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                WrittenBooks = books.Where(b => b.FullName == author.FirstName + " " + author.LastName).ToList()
+            };
+
+            return View(authorView);
         }
 
         // GET: Authors/Create

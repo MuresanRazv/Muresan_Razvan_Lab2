@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Muresan_Razvan_Lab2.Data;
 using Muresan_Razvan_Lab2.Models;
@@ -20,10 +21,42 @@ namespace Muresan_Razvan_Lab2.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            var libraryContext = _context.Book.Include(b => b.Genre);
-            return View(await libraryContext.ToListAsync());
+            ViewData["TitleSortParam"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["PriceSortParam"] = sortOrder == "Price" ? "price_desc" : "Price";
+            ViewData["CurrentFilter"] = searchString;
+            var books = from b in _context.Book
+                        join a in _context.Author on b.AuthorID equals a.ID
+                        select new BookViewModel
+                        {
+                            ID = b.ID,
+                            Title = b.Title,
+                            Price = b.Price,
+                            FullName = a.FirstName + " " + a.LastName
+                        };
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(s => s.Title.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    books = books.OrderByDescending(b => b.Title);
+                    break;
+                case "Price":
+                    books = books.OrderBy(b => b.Price);
+                    break;
+                case "price_desc":
+                    books = books.OrderByDescending(b => b.Price);
+                    break;
+                default:
+                    books = books.OrderBy(b => b.Title);
+                    break;
+            }
+            return View(await books.AsNoTracking().ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -35,8 +68,11 @@ namespace Muresan_Razvan_Lab2.Controllers
             }
 
             var book = await _context.Book
-                .Include(b => b.Genre)
+                .Include(s => s.Orders)
+                .ThenInclude(e => e.Customer)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (book == null)
             {
                 return NotFound();
@@ -60,13 +96,21 @@ namespace Muresan_Razvan_Lab2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Price,GenreID")] Book book)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(book);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["GenreID"] = new SelectList(_context.Genre, "ID", "ID", book.GenreID);
+            } catch (DbUpdateException /* ex */)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                "Try again, and if the problem persists ");
             }
-            ViewData["GenreID"] = new SelectList(_context.Genre, "ID", "ID", book.GenreID);
+
             return View(book);
         }
 
@@ -105,6 +149,15 @@ namespace Muresan_Razvan_Lab2.Controllers
             {
                 try
                 {
+                    if (await TryUpdateModelAsync<Book>(
+                            book,
+                            "",
+                            s => s.Title, s => s.Price, s => s.GenreID, s => s.AuthorID
+                        ))
+                    {
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -127,7 +180,7 @@ namespace Muresan_Razvan_Lab2.Controllers
         }
 
         // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -136,10 +189,19 @@ namespace Muresan_Razvan_Lab2.Controllers
 
             var book = await _context.Book
                 .Include(b => b.Genre)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (book == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
             }
 
             return View(book);
@@ -151,13 +213,21 @@ namespace Muresan_Razvan_Lab2.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Book.FindAsync(id);
-            if (book != null)
+            if (book == null)
             {
-                _context.Book.Remove(book);
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.Book.Remove(book);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
         }
 
         private bool BookExists(int id)

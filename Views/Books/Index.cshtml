@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Muresan_Razvan_Lab2.Models.Book>
+﻿@model IEnumerable<Muresan_Razvan_Lab2.Models.BookViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,17 +9,29 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by title: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParam"]">
+                    @Html.DisplayNameFor(model => model.Title)
+                </a>               
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParam"]">
+                    @Html.DisplayNameFor(model => model.Price)
+                </a>
             </th>
             <th></th>
         </tr>
@@ -32,9 +44,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre.ID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
