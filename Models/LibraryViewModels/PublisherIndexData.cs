@@ -1,4 +1,6 @@
-﻿namespace Muresan_Razvan_Lab2.Models.LibraryViewModels
+﻿using LibraryModel.Models;
+
+namespace Muresan_Razvan_Lab2.Models.LibraryViewModels
 {
     public class PublisherIndexData
     {

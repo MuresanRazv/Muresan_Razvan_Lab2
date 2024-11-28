@@ -5,6 +5,10 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Muresan_Razvan_Lab2", "Muresan_Razvan_Lab2.csproj", "{6A0DDD24-CA4E-4668-84FD-97E44A7A60D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryModel", "..\LibraryModel\LibraryModel.csproj", "{33BBBE24-8F47-4D8D-9412-69D86A59C59D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryWebAPI", "..\LibraryWebAPI\LibraryWebAPI.csproj", "{D301A82B-40F1-42C0-AA4D-8AF5D539C4AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{6A0DDD24-CA4E-4668-84FD-97E44A7A60D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0DDD24-CA4E-4668-84FD-97E44A7A60D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A0DDD24-CA4E-4668-84FD-97E44A7A60D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BBBE24-8F47-4D8D-9412-69D86A59C59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33BBBE24-8F47-4D8D-9412-69D86A59C59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33BBBE24-8F47-4D8D-9412-69D86A59C59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33BBBE24-8F47-4D8D-9412-69D86A59C59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D301A82B-40F1-42C0-AA4D-8AF5D539C4AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D301A82B-40F1-42C0-AA4D-8AF5D539C4AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D301A82B-40F1-42C0-AA4D-8AF5D539C4AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D301A82B-40F1-42C0-AA4D-8AF5D539C4AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

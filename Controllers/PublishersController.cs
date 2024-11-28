@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Muresan_Razvan_Lab2.Data;
-using Muresan_Razvan_Lab2.Models;
+using LibraryModel.Data;
+using LibraryModel.Models;
 using Muresan_Razvan_Lab2.Models.LibraryViewModels;
 
 namespace Muresan_Razvan_Lab2.Controllers

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Muresan_Razvan_Lab2.Data;
+using LibraryModel.Data;
 using Muresan_Razvan_Lab2.Models;
 using Muresan_Razvan_Lab2.Models.LibraryViewModels;
 using System.Diagnostics;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Muresan_Razvan_Lab2.Models;
+using LibraryModel.Models;
+using LibraryModel.Data;
 
 namespace Muresan_Razvan_Lab2.Data
 {
@@ -42,10 +43,20 @@ namespace Muresan_Razvan_Lab2.Data
                     context.Book.Add(b);
                 }
                 context.SaveChanges();
+                var cities = new City[]
+                {
+                    new City { Name = "Ploiesti"},
+                    new City { Name = "Cluj-Napoca"},
+                };
+                foreach (City c in cities)
+                {
+                    context.City.Add(c);
+                }
+                context.SaveChanges();
                 var customers = new Customer[]
                 {
-                    new Customer{Name="Popescu Marcela",Address="Str. Plopilor 25, Ploiesti", BirthDate=DateTime.Parse("1979-09-01")},
-                    new Customer{Name="Mihailescu Cornel",Address="Str. M. Eminescu 5, Cluj-Napoca",BirthDate=DateTime.Parse("1969-07-08")},
+                    new Customer{Name="Popescu Marcela",Address="Str. Plopilor 25, Ploiesti", BirthDate=DateTime.Parse("1979-09-01"), CityID=1},
+                    new Customer{Name="Mihailescu Cornel",Address="Str. M. Eminescu 5, Cluj-Napoca",BirthDate=DateTime.Parse("1969-07-08"), CityID=2},
                 };
                 foreach (Customer c in customers)
                 {
