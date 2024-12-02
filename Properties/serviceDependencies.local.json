@@ -17,6 +17,10 @@
     "mssql3": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:NewLibraryContext"
+    },
+    "mssql4": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:IdentityContextConnection"
     }
   }
 }
